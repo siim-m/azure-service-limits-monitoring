@@ -47,6 +47,17 @@ export default async function (context, req) {
         )
       ).json();
 
+      const network = await (
+        await fetch(
+          `https://management.azure.com/subscriptions/${subscription.subscriptionId}/providers/Microsoft.Network/locations/australiaeast/usages?api-version=2022-01-01`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+      ).json();
+
       customEvents.push({
         name: 'Number of Role Assignments',
         subscriptionName: subscription.displayName,
@@ -56,6 +67,16 @@ export default async function (context, req) {
       });
 
       compute.value.forEach((item) => {
+        customEvents.push({
+          name: item.name.localizedValue,
+          subscriptionName: subscription.displayName,
+          subscriptionId: subscription.subscriptionId,
+          currentValue: item.currentValue,
+          limit: item.limit,
+        });
+      });
+
+      network.value.forEach((item) => {
         customEvents.push({
           name: item.name.localizedValue,
           subscriptionName: subscription.displayName,
