@@ -1,11 +1,11 @@
-import { DefaultAzureCredential } from '@azure/identity';
+import { ManagedIdentityCredential } from '@azure/identity';
 import fetch from 'node-fetch';
 import appInsights from 'applicationinsights';
 
 appInsights.setup();
 const client = appInsights.defaultClient;
 
-const credential = new DefaultAzureCredential();
+const credential = new ManagedIdentityCredential('498536b2-9bd2-4fb4-bed9-f781f0f7f9c2');
 
 export default async function (context, req) {
   const operationIdOverride = {
